@@ -5,21 +5,27 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
+    "build":"nexe dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@serialport/parser-readline": "^9.0.7",
     "@types/sequelize": "^4.28.9",
+    "@types/serialport": "^8.0.1",
     "body-parser": "^1.19.0",
+    "buffer": "^6.0.3",
     "concurrently": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "nexe": "^4.0.0-beta.18",
     "nodemod": "^2.7.2",
     "nodemon": "^2.0.7",
     "postgres": "^1.0.2",
     "sequelize": "^6.5.1",
     "sequelize-cli": "^6.2.0",
+    "serialport": "^9.0.7",
     "socket.io": "^3.1.2"
   },
   "devDependencies": {

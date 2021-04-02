@@ -3,11 +3,11 @@
 import { SERVER_PORT } from './../global/environment';
 import express from 'express';
 import http from 'http'
-import socketIO from 'socket.io'
-import { Socket } from 'socket.io';
 
 import * as socket from '../sockets/sockets';
 import SocketIO from 'socket.io';
+import * as serial from '../class/serial'
+import ReadSerialPort from './serial';
 
 const ios = require('socket.io')(80)
 export default class Server{
@@ -16,6 +16,7 @@ export default class Server{
     public port:number;
     public io: SocketIO.Server;
     private httServer:http.Server;
+    private socketPort:ReadSerialPort;       
 
     private constructor(){
         this.app = express();
@@ -23,6 +24,7 @@ export default class Server{
         this.port = SERVER_PORT;
         this.httServer = new http.Server(this.app);
         
+        this.socketPort= ReadSerialPort.getInstance("COM254",9600,true);
        
 
         this.io = require("socket.io")(this.httServer, {
@@ -53,11 +55,19 @@ export default class Server{
 
     private listenSockets(){
         console.log("escuchando conexiones");
-        this.io.on('connection', cliente  => {           
+        
+       
+        this.io.on('connection', cliente  => {    
+           
             console.log("cliente conectado");            
             //desconectar            
-            socket.mensaje(cliente, this.io);
+            //socket.mensaje(cliente, this.io);
 
+            const pesovl = (peso:number)=>{
+                this.io.emit("pesoBascula",{peso});
+                console.log("emitido evento");
+            }
+            
         });
 
         
@@ -65,9 +75,29 @@ export default class Server{
 
     start(callback: any ){
        
-
         //this.httServer.listen(this.port, "192.168.1.57", callback);
         this.httServer.listen(this.port, "localhost", callback);
+
+        const pt = ReadSerialPort.getInstance("COM254",9600,true);
+        
+        let valueOld:number=0;
+        let value:number=0;
+        const dt = ReadSerialPort._intace;
+        console.log("emitiendo escucha:");
+
+        pt.port.on("open",()=>{
+                setInterval(()=>{
+                    pt.port.write("$");
+                    value = Number(pt.port.read()?.toString())
+                    //if(valueOld !== value){
+                        console.log("port:",value)
+                        valueOld=value;
+                        this.io.emit("pesoBascula",value);
+                    //}
+                                            
+                },500);
+            });
+        }
     }
     
 }

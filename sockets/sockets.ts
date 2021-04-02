@@ -2,7 +2,6 @@ import {Socket} from "socket.io";
 import socketIO from 'socket.io';
 import { Usuario } from '../class/usuarios';
 import { UsuariController } from '../controller/UsuarioController';
-import SocketIO from 'socket.io';
 
 
 export const usrcontroller = new UsuariController();

@@ -12,7 +12,7 @@ router.get('/', ( req: Request, res: Response  ) => {
     res.sendFile(path.join(__dirname,'..','..','www','index.html'));
 
 });
-
+/*
 setInterval(()=>{
     console.log("emitiendo");
     const payload={de:"data",mensaje:"prueba"}
@@ -20,7 +20,7 @@ setInterval(()=>{
     //in es para enviar un mensaje a un canal en particular
     server.io.emit('messageEvent', payload);
 },1000)
-
+*/
 
 export default router;
 
